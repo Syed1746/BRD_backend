@@ -3,37 +3,50 @@ const cors = require("cors");
 const connectDB = require("./config/connectDB");
 require("dotenv").config();
 
+const AuthRouter = require("./routes/authRoutes");
+const EmployeeRouter = require("./routes/employeeRoutes");
+const AttendanceRouter = require("./routes/attendanceRoutes");
+const CustomerRouter = require("./routes/customerRoutes");
+const VendorRouter = require("./routes/vendor");
+const ProjectRouter = require("./routes/projects");
+const TimesheetRouter = require("./routes/timesheet");
+const InvoiceRouter = require("./routes/invoice");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ apply cors first
-app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://vwjgtz5s-5173.inc1.devtunnels.ms",
-        "https://brd-frontend-two.vercel.app"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
-}));
+// ✅ Setup CORS correctly
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "https://vwjgtz5s-5173.inc1.devtunnels.ms",
+            "https://brd-frontend-two.vercel.app"
+        ],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        credentials: true
+    })
+);
 
-// ✅ handle preflight requests globally
+// ✅ Handle preflight requests globally
 app.options("*", cors());
 
+// ✅ Middleware
 app.use(express.json());
 
-// routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/employee", require("./routes/employeeRoutes"));
-app.use("/api/attendance", require("./routes/attendanceRoutes"));
-app.use("/api/customer", require("./routes/customerRoutes"));
-app.use("/api/vendor", require("./routes/vendor"));
-app.use("/api/projects", require("./routes/projects"));
-app.use("/api/timesheet", require("./routes/timesheet"));
-app.use("/api/invoice", require("./routes/invoice"));
+// ✅ Routes (only relative paths here!)
+app.use("/api/auth", AuthRouter);
+app.use("/api/employee", EmployeeRouter);
+app.use("/api/attendance", AttendanceRouter);
+app.use("/api/customer", CustomerRouter);
+app.use("/api/vendor", VendorRouter);
+app.use("/api/projects", ProjectRouter);
+app.use("/api/timesheet", TimesheetRouter);
+app.use("/api/invoice", InvoiceRouter);
 
+// ✅ Connect to DB and start server
 connectDB();
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`✅ Server running on port ${PORT}`);
 });
