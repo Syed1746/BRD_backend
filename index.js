@@ -8,7 +8,11 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: "https://brd-frontend-two.vercel.app", // your frontend domain
+    credentials: true, // allow cookies / auth headers
+}));
 app.use(express.json());
 
 // Routers
