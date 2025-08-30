@@ -15,10 +15,11 @@ const InvoiceRouter = require("./routes/invoice");
 require('dotenv').config();
 
 app.use(cors({
-    origin: "http://localhost:5173", // your frontend URL
+    origin: ["http://localhost:5173", "https://vwjgtz5s-5173.inc1.devtunnels.ms"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
+
 app.use(express.json());
 app.use("/api/auth", AuthRouter);
 app.use("/api/employee", EmployeeRouter)
