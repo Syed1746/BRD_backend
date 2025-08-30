@@ -12,14 +12,14 @@ app.use(cors());
 app.use(express.json());
 
 // Routers
-const AuthRouter = require("./routes/AuthRouter");
-const EmployeeRouter = require("./routes/EmployeeRouter");
-const AttendanceRouter = require("./routes/AttendanceRouter");
-const TimesheetRouter = require("./routes/TimesheetRouter");
-const ProjectRouter = require("./routes/ProjectRouter");
-const VendorRouter = require("./routes/VendorRouter");
-const CustomerRouter = require("./routes/CustomerRouter");
-const InvoiceRouter = require("./routes/InvoiceRouter");
+const AuthRouter = require("./routes/authRoutes");
+const EmployeeRouter = require("./routes/employeeRoutes");
+const AttendanceRouter = require("./routes/attendanceRoutes");
+const TimesheetRouter = require("./routes/timesheet");
+const ProjectRouter = require("./routes/projects");
+const VendorRouter = require("./routes/vendor");
+const CustomerRouter = require("./routes/customerRoutes");
+const InvoiceRouter = require("./routes/invoice");
 
 // ✅ IMPORTANT: only use relative paths here
 app.use("/api/auth", AuthRouter);
