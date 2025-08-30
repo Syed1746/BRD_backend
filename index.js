@@ -1,52 +1,46 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const cors = require("cors");
-const connectDB = require("./config/connectDB");
-require("dotenv").config();
 
-const AuthRouter = require("./routes/authRoutes");
-const EmployeeRouter = require("./routes/employeeRoutes");
-const AttendanceRouter = require("./routes/attendanceRoutes");
-const CustomerRouter = require("./routes/customerRoutes");
-const VendorRouter = require("./routes/vendor");
-const ProjectRouter = require("./routes/projects");
-const TimesheetRouter = require("./routes/timesheet");
-const InvoiceRouter = require("./routes/invoice");
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// ✅ Setup CORS correctly
-app.use(
-    cors({
-        origin: [
-            "http://localhost:5173",
-            "https://vwjgtz5s-5173.inc1.devtunnels.ms",
-            "https://brd-frontend-two.vercel.app"
-        ],
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        credentials: true
-    })
-);
-
-// ✅ Handle preflight requests globally
-app.options("*", cors());
-
-// ✅ Middleware
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-// ✅ Routes (only relative paths here!)
+// Routers
+const AuthRouter = require("./routes/AuthRouter");
+const EmployeeRouter = require("./routes/EmployeeRouter");
+const AttendanceRouter = require("./routes/AttendanceRouter");
+const TimesheetRouter = require("./routes/TimesheetRouter");
+const ProjectRouter = require("./routes/ProjectRouter");
+const VendorRouter = require("./routes/VendorRouter");
+const CustomerRouter = require("./routes/CustomerRouter");
+const InvoiceRouter = require("./routes/InvoiceRouter");
+
+// ✅ IMPORTANT: only use relative paths here
 app.use("/api/auth", AuthRouter);
-app.use("/api/employee", EmployeeRouter);
+app.use("/api/employees", EmployeeRouter);
 app.use("/api/attendance", AttendanceRouter);
-app.use("/api/customer", CustomerRouter);
-app.use("/api/vendor", VendorRouter);
+app.use("/api/timesheets", TimesheetRouter);
 app.use("/api/projects", ProjectRouter);
-app.use("/api/timesheet", TimesheetRouter);
-app.use("/api/invoice", InvoiceRouter);
+app.use("/api/vendors", VendorRouter);
+app.use("/api/customers", CustomerRouter);
+app.use("/api/invoices", InvoiceRouter);
 
-// ✅ Connect to DB and start server
-connectDB();
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("✅ MongoDB connected"))
+    .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
