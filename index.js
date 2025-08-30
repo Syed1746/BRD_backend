@@ -1,19 +1,12 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
-const connectDB = require("./config/connectDB")
-    // const dotenv = require.config()("dotenv");
-const PORT = process.env.PORT || 3000;
-const AuthRouter = require("./routes/authRoutes");
-const EmployeeRouter = require("./routes/employeeRoutes");
-const AttendanceRouter = require("./routes/attendanceRoutes");
-const CustomerRouter = require("./routes/customerRoutes");
-const VendorRouter = require("./routes/vendor");
-const ProjectRouter = require("./routes/projects");
-const TimesheetRouter = require("./routes/timesheet");
-const InvoiceRouter = require("./routes/invoice");
-require('dotenv').config();
+const connectDB = require("./config/connectDB");
+require("dotenv").config();
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ✅ apply cors first
 app.use(cors({
     origin: [
         "http://localhost:5173",
@@ -24,19 +17,23 @@ app.use(cors({
     credentials: true
 }));
 
-// also handle preflight requests globally
+// ✅ handle preflight requests globally
 app.options("*", cors());
 
 app.use(express.json());
-app.use("/api/auth", AuthRouter);
-app.use("/api/employee", EmployeeRouter)
-app.use("/api/attendance", AttendanceRouter)
-app.use("/api/customer", CustomerRouter)
-app.use("/api/vendor", VendorRouter)
-app.use("/api/projects", ProjectRouter)
-app.use("/api/timesheet", TimesheetRouter)
-app.use("/api/invoice", InvoiceRouter)
+
+// routes
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/employee", require("./routes/employeeRoutes"));
+app.use("/api/attendance", require("./routes/attendanceRoutes"));
+app.use("/api/customer", require("./routes/customerRoutes"));
+app.use("/api/vendor", require("./routes/vendor"));
+app.use("/api/projects", require("./routes/projects"));
+app.use("/api/timesheet", require("./routes/timesheet"));
+app.use("/api/invoice", require("./routes/invoice"));
+
 connectDB();
+
 app.listen(PORT, () => {
-    console.log(`server is listening on ${PORT}`)
-})
+    console.log(`Server running on port ${PORT}`);
+});
