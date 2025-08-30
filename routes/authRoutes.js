@@ -32,10 +32,17 @@ AuthRouter.post("/signup", async function(req, res) {
 
 AuthRouter.post("/login", async function(req, res) {
     try {
-        const { usernameOrEmail, password } = req.body;
+        const { usernameOrEmail, email, username, password } = req.body;
+
+        // Use whichever field is provided
+        const identifier = usernameOrEmail || email || username;
+
+        if (!identifier || !password) {
+            return res.status(400).json({ message: "Email/Username and password are required" });
+        }
 
         const UserFind = await User.findOne({
-            $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+            $or: [{ username: identifier }, { email: identifier }],
         });
 
         if (!UserFind) {
@@ -54,11 +61,12 @@ AuthRouter.post("/login", async function(req, res) {
         res.status(200).json({
             message: "Login successful",
             token,
-            role: UserFind.role
+            role: UserFind.role,
         });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 });
+
 
 module.exports = AuthRouter;
