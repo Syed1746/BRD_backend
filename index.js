@@ -15,10 +15,17 @@ const InvoiceRouter = require("./routes/invoice");
 require('dotenv').config();
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://vwjgtz5s-5173.inc1.devtunnels.ms", "https://brd-frontend-two.vercel.app/"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: [
+        "http://localhost:5173",
+        "https://vwjgtz5s-5173.inc1.devtunnels.ms",
+        "https://brd-frontend-two.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
+
+// also handle preflight requests globally
+app.options("*", cors());
 
 app.use(express.json());
 app.use("/api/auth", AuthRouter);
