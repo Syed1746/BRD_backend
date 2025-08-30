@@ -36,7 +36,7 @@ app.use("/api/customers", CustomerRouter);
 app.use("/api/invoices", InvoiceRouter);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
