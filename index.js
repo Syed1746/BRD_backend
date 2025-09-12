@@ -13,7 +13,7 @@ app.use(cors({
     origin: [
         "https://brd-frontend-two.vercel.app", // deployed frontend
         "http://localhost:5173", // local React frontend
-        "http://localhost:4173/" //local production frontend
+        "http://localhost:4173" //local production frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"]
