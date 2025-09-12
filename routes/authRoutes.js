@@ -55,7 +55,7 @@
             }
 
             const token = jwt.sign({ id: UserFind._id, role: UserFind.role },
-                process.env.JWT_SECRET_PASSWORD, { expiresIn: "1d" }
+                process.env.JWT_SECRET, { expiresIn: "1d" }
             );
 
             res.status(200).json({
