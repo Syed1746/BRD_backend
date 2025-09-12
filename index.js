@@ -10,9 +10,15 @@ const app = express();
 // Middleware
 // app.use(cors());
 app.use(cors({
-    origin: "https://brd-frontend-two.vercel.app", // your frontend domain
-    credentials: true, // allow cookies / auth headers
+    origin: [
+        "https://brd-frontend-two.vercel.app", // deployed frontend
+        "http://localhost:5173" // local React frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+        // credentials: true,
 }));
+
 app.use(express.json());
 
 // Routers

@@ -17,7 +17,9 @@ ProjectRouter.post("/", auth(["Admin", "Manager"]), async(req, res) => {
 // ✏️ Update Project
 ProjectRouter.put("/:id", auth(["Admin", "Manager"]), async(req, res) => {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
         if (!project) return res.status(404).json({ message: "Project not found" });
         res.json({ message: "Project updated successfully", project });
     } catch (err) {
@@ -28,9 +30,35 @@ ProjectRouter.put("/:id", auth(["Admin", "Manager"]), async(req, res) => {
 // ❌ Deactivate (mark as On Hold)
 ProjectRouter.put("/:id/deactivate", auth(["Admin", "Manager"]), async(req, res) => {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.id, { status: "On Hold" }, { new: true });
+        const project = await Project.findByIdAndUpdate(
+            req.params.id, { status: "On Hold" }, { new: true }
+        );
         if (!project) return res.status(404).json({ message: "Project not found" });
         res.json({ message: "Project deactivated successfully", project });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// 📝 Assign Project to Employee
+ProjectRouter.put("/:id/assign", auth(["Admin", "Manager"]), async(req, res) => {
+    try {
+        const { employeeId } = req.body;
+        if (!employeeId) {
+            return res.status(400).json({ message: "Employee ID is required" });
+        }
+
+        const project = await Project.findById(req.params.id);
+        if (!project) return res.status(404).json({ message: "Project not found" });
+
+        // Add employeeId to assignedTo array (avoid duplicates)
+        if (!project.assignedTo) project.assignedTo = [];
+        if (!project.assignedTo.includes(employeeId)) {
+            project.assignedTo.push(employeeId);
+        }
+
+        await project.save();
+        res.json({ message: "Project assigned to employee successfully", project });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
